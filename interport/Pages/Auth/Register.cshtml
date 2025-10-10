@@ -34,6 +34,7 @@
     <div class="mb-3">
         <label for="email" class="form-label">Email Address</label>
         <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+        <span asp-validation-for="FormData.Email" class="text-danger"></span>
     </div>
 
     <!-- Phone Number -->
@@ -68,7 +69,7 @@
                 <option value="Admin">Admin</option>
                 <option value="Quotation Officer">Quotation Officer</option>
                 <option value="Booking Officer">Booking Officer</option>
-                <option value="Warehouse Officer">Warehouse Officer</option>
+                <option value="Warehouse Worker">Warehouse Worker</option>
                 <option value="Manager">Manager</option>
                 <option value="CIO">CIO</option>
             </select>
@@ -82,6 +83,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
 </form>
 
 <script>

@@ -31,7 +31,9 @@ Icon?
 
 # .NET build output (solution-wide)
 **/bin/
+*/bin/
 **/obj/
+*/obj/
 **/out/
 **/[Bb]uild/
 **/[Ll]og/

@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using interport.Data;
+using interport.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace interport.Pages.Auth;
 
@@ -10,25 +12,25 @@ public class RegisterModel : PageModel
     private AppDbContext dB;
     public RegisterModel(AppDbContext db) => dB = db;
 
-            [BindProperty] public InputModel Input { get; set; } = new();
+    [BindProperty] public InputModel FormData { get; set; } = new();
 
+    //HTML form data
         public class InputModel
         {
-            [Required] public string Role { get; } = "";            // "Customer" or "Employee"
+            [Required] public string Role { get; } = "";
+            [Required] public string FirstName { get;} = "";
+            [Required] public string LastName { get;} = "";
+            [Required, EmailAddress] public string Email { get;} = "";
 
-            [Required] public string FirstName { get; set; } = "";
-            [Required] public string LastName { get; set; } = "";
-
-            [Required, EmailAddress] public string Email { get; set; } = "";
-
-            [Required] public string Phone { get; set; } = "";
-            [Required] public string Address { get; set; } = "";
+            [Required] public string Phone { get; } = "";
+            [Required] public string Address { get;  } = "";
 
             // Customer-only
             public string? CompanyName { get; }
 
-            // Employee-only (comes from <select>)
-            public string? EmployeeType { get; }                     // e.g. "Quotation Officer"
+            
+            // Employee only
+            public string? EmployeeType { get; }
 
             [Required, DataType(DataType.Password)]
             public string Password { get; } = "";
@@ -36,77 +38,76 @@ public class RegisterModel : PageModel
 
         public void OnGet() {}
 
+        //On post or form submitted.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid) return Page();
-
-            // 1) Enforce unique email across both tables (simple prototype rule)
-            bool emailInUse = await _db.Customers.AnyAsync(c => c.Email == Input.Email)
-                           || await _db.Employees.AnyAsync(e => e.Email == Input.Email);
+            
+            
+            bool emailInUse = await dB.Customers.AnyAsync(customer => customer.Email == FormData.Email) 
+                              || await dB.Employees.AnyAsync(employee => employee.Email == FormData.Email);
             if (emailInUse)
             {
-                ModelState.AddModelError(nameof(Input.Email), "Email is already registered.");
+                ModelState.AddModelError(nameof(FormData.Email), "Email is already registered.");
                 return Page();
             }
 
-            // 2) Hash password
-            var passwordHash = HashPassword(Input.Password);
 
-            // 3) Branch by role and persist
-            if (string.Equals(Input.Role, "Customer", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(FormData.Role, "Customer", StringComparison.OrdinalIgnoreCase))
             {
-                var customer = new Customer
+                var newCustomer = new Customer
                 {
-                    FirstName   = Input.FirstName,
-                    LastName    = Input.LastName,
-                    Email       = Input.Email,
-                    Phone       = Input.Phone,
-                    Address     = Input.Address,
-                    CompanyName = Input.CompanyName,
-                    PasswordHash = passwordHash
+                    FirstName   = FormData.FirstName,
+                    LastName    = FormData.LastName,
+                    Email       = FormData.Email,
+                    Phone       = FormData.Phone,
+                    Address     = FormData.Address,
+                    CompanyName = FormData.CompanyName,
+                    PasswordHash = FormData.Password
                 };
-                _db.Customers.Add(customer);
+                dB.Customers.Add(newCustomer);
             }
-            else if (string.Equals(Input.Role, "Employee", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(FormData.Role, "Employee", StringComparison.OrdinalIgnoreCase))
             {
-                var type = MapEmployeeType(Input.EmployeeType);
-                var employee = new Employee
+                var type = MapEmployeeType(FormData.EmployeeType);
+                Employee newEmployee = new Employee
                 {
-                    FirstName    = Input.FirstName,
-                    LastName     = Input.LastName,
-                    Email        = Input.Email,
-                    Phone        = Input.Phone,
-                    Address      = Input.Address,
-                    EmployeeType = type,
-                    PasswordHash = passwordHash
+                    FirstName    = FormData.FirstName,
+                    FamilyName     = FormData.LastName,
+                    Email        = FormData.Email,
+                    Phone        = FormData.Phone,
+                    Address      = FormData.Address,
+                    EmployeeType = FormData.EmployeeType,
+                    PasswordHash = FormData.Password,
+                    CreatedUtc   = DateTime.UtcNow,
                 };
-                _db.Employees.Add(employee);
+                dB.Employees.Add(newEmployee);
             }
             else
             {
-                ModelState.AddModelError(nameof(Input.Role), "Please choose Customer or Employee.");
+                ModelState.AddModelError(nameof(FormData.Role), "Please choose Customer or Employee.");
                 return Page();
             }
 
-            await _db.SaveChangesAsync();
+            await dB.SaveChangesAsync();
 
-            // 4) Redirect to Login (or sign-in immediately if you prefer)
-            return RedirectToPage("/Auth/Login");
+            // ****Implement redirect to home screen.
+            return RedirectToPage("/Auth/Register");
         }
 
-        private static EmployeeType MapEmployeeType(string? raw)
+        private static Enums.EmployeeType MapEmployeeType(string? raw)
         {
-            if (string.IsNullOrWhiteSpace(raw)) return EmployeeType.Manager; // default if none selected
-            // Your <select> uses labels with spaces (e.g., "Quotation Officer"), map them:
+            if (string.IsNullOrWhiteSpace(raw)) return Enums.EmployeeType.WarehouseWorker; // default if something isnt selected
+            // map logical enums to form types:
             return raw.Trim().ToLower() switch
             {
-                "admin"               => EmployeeType.Admin,
-                "quotation officer"   => EmployeeType.QuotationOfficer,
-                "booking officer"     => EmployeeType.BookingOfficer,
-                "warehouse officer"   => EmployeeType.WarehouseOfficer,
-                "manager"             => EmployeeType.Manager,
-                "cio"                 => EmployeeType.CIO,
-                _                     => EmployeeType.Manager
+                "admin"               => Enums.EmployeeType.Admin,
+                "quotation officer"   => Enums.EmployeeType.QuotationOfficer,
+                "booking officer"     => Enums.EmployeeType.BookingOfficer,
+                "warehouse officer"   => Enums.EmployeeType.WarehouseWorker,
+                "manager"             => Enums.EmployeeType.Manager,
+                "cio"                 => Enums.EmployeeType.Cio,
+                _                     => Enums.EmployeeType.Manager
             };
         }
     
