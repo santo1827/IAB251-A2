@@ -1,4 +1,4 @@
-using interport;
+using interport.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -4,8 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>interportProject</AssemblyName>
-    <RootNamespace>interportProject</RootNamespace>
+    <AssemblyName>interport</AssemblyName>
+    <RootNamespace>interport</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

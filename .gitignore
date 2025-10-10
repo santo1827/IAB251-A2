@@ -30,7 +30,7 @@ Icon?
 
 
 # .NET build output (solution-wide)
-FleetPro/bin/
+**/bin/
 **/obj/
 **/out/
 **/[Bb]uild/

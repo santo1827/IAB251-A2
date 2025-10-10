@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace interport;
+namespace interport.Data;
 
 public class AppDbContext : DbContext
 {
