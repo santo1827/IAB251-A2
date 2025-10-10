@@ -1,0 +1,61 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+<section class="py-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+            <h1 class="display-5 fw-bold mb-3">InterportCargo Enterprise Portal</h1>
+            <p class="lead mb-4">Register, log in, and submit quotation requests. Streamline bookings, outturns, and
+                operational workflows.</p>
+            <div class="d-flex gap-2">
+                <a asp-page="/Auth/RegisterCustomer" class="btn btn-primary btn-lg">Register as Customer</a>
+                <a asp-page="/Auth/RegisterEmployee" class="btn btn-outline-primary btn-lg">Register as Employee</a>
+                <a asp-page="/Auth/Login" class="btn btn-secondary btn-lg">Login</a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h5">Quick Actions</h2>
+                    <div class="list-group list-group-flush">
+                        <a class="list-group-item list-group-item-action" asp-page="/Quotation/Request">Request
+                            Quotation</a>
+                        <a class="list-group-item list-group-item-action" asp-page="/Quotation/Inbox">View My
+                            Quotations</a>
+                        <a class="list-group-item list-group-item-action" asp-page="/Auth/Logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="py-4">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="h5">T1 Main Access</h3>
+                    <p>Entry point to registration, authentication, and quotation workflows.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="h5">I1 Fast Login</h3>
+                    <p>Credential validation and access to Request Quotation on success.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="h5">I2 Quotation Request</h3>
+                    <p>Source, destination, containers, package nature, and job scope.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

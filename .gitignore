@@ -1,0 +1,84 @@
+# OS (macOS)
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+
+# IDE / Editors
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# VS Code — keep common workspace files versioned; ignore the rest
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# ReSharper / Rider
+.ReSharper*/
+*_Resharper.*
+.ReSharperCache
+
+
+# .NET build output (solution-wide)
+FleetPro/bin/
+**/obj/
+**/out/
+**/[Bb]uild/
+**/[Ll]og/
+*.log
+
+# (Explicit, for clarity with your structure)
+FleetPro/bin/
+FleetPro/obj/
+
+# ASP.NET Core / Front-end artifacts
+FleetPro/wwwroot/dist/
+FleetPro/wwwroot/build/
+FleetPro/wwwroot/lib/
+
+
+# Databases (EF Core / SQLite local dev)
+
+**/*.db
+**/*.db-shm
+**/*.db-wal
+
+
+
+# Packaging / publish
+
+/publish/
+/artifacts/
+*.nupkg
+*.snupkg
+
+
+# Secrets & environment
+
+.env
+.env.*
+secrets.json
+
+
+# Test & temp files
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+*.pid
+*.seed
+*.tmp
+*.temp
+*.swp
+*.swo
