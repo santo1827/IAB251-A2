@@ -1,0 +1,116 @@
+@page
+@using interport.Pages.Auth
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<h1 class="mb-4">Register</h1>
+
+<form method="post">
+    <!-- Role -->
+    <div class="mb-3">
+        <label for="role" class="form-label">Registering as</label>
+        <select id="role" class="form-select">
+            <option value="" selected disabled>Choose...</option>
+            <option value="Customer">Customer</option>
+            <option value="Employee">Employee</option>
+        </select>
+    </div>
+
+
+    <!-- First and Last Name (side by side) -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" name="firstName">
+        </div>
+        <div class="col-md-6">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" name="lastName">
+        </div>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+        <label for="email" class="form-label">Email Address</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+        <span asp-validation-for="FormData.Email" class="text-danger"></span>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="mb-3">
+        <label for="phone" class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" id="phone" name="phone" placeholder="+61 400 000 000"
+            pattern="^\+?\d{0,13}$" required>
+    </div>
+
+    <!-- Address -->
+    <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <input type="text" class="form-control" id="address" name="address">
+    </div>
+
+    <!-- Customer section -->
+    <fieldset id="customerSection" class="d-none" aria-hidden="true">
+        <legend class="fs-6 mb-2">Customer Details</legend>
+        <div class="mb-3">
+            <label for="companyName" class="form-label">Company Name</label>
+            <input type="text" class="form-control" id="companyName" name="companyName">
+        </div>
+    </fieldset>
+
+    <!-- Employee section -->
+    <fieldset id="employeeSection" class="d-none" aria-hidden="true">
+        <legend class="fs-6 mb-2">Employee Details</legend>
+        <div class="mb-3">
+            <label for="employeeType" class="form-label">Employee Type</label>
+            <select id="employeeType" class="form-select" name="employeeType">
+                <option value="" selected disabled>Select an option...</option>
+                <option value="Admin">Admin</option>
+                <option value="Quotation Officer">Quotation Officer</option>
+                <option value="Booking Officer">Booking Officer</option>
+                <option value="Warehouse Worker">Warehouse Worker</option>
+                <option value="Manager">Manager</option>
+                <option value="CIO">CIO</option>
+            </select>
+        </div>
+    </fieldset>
+
+    <!-- Password -->
+    <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
+</form>
+
+<p class="text-muted mt-3">Already have an account?
+  <a href="/Auth/Login">Login here</a>
+</p>
+
+<script>
+    const roleSelect = document.getElementById('role');
+    const customerSection = document.getElementById('customerSection'); // <-- matches HTML
+    const employeeSection = document.getElementById('employeeSection');
+
+    function setSection(section, visible) {
+        if (!section) return; // defensive
+        section.classList.toggle('d-none', !visible);
+        section.setAttribute('aria-hidden', String(!visible));
+        section.querySelectorAll('input, select, textarea').forEach(el => { // <-- no trailing comma
+            el.disabled = !visible;
+        });
+    }
+
+    function syncUI() {
+        const role = roleSelect.value;
+        setSection(customerSection, role === 'Customer');
+        setSection(employeeSection, role === 'Employee');
+    }
+
+    roleSelect.addEventListener('change', syncUI);
+    // Optional: preselect a default role to avoid "both hidden" on first render
+    syncUI();
+</script>

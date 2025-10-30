@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C#: interport [https]",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/interport/interport.csproj",
+            "launchConfigurationId": "TargetFramework=;https"
+        }
+    ]
+}
