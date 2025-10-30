@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace InterportCargo.Web.Pages.Auth;
+namespace interport.Web.Pages.Auth;
 
 public class LoginModel : PageModel
 {
