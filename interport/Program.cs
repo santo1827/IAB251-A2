@@ -1,4 +1,5 @@
 using interport.Data;
+using interport.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add service
+builder.Services.AddScoped<IQuoteLineService, QuoteLineService>();
 
 var app = builder.Build();
 
