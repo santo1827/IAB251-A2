@@ -3,8 +3,172 @@
 
 @model RequestModel
 @{
-    ViewData["Title"] = "Request Quotation";
+    ViewData["Title"] = "Submit Quotation Request";
 }
 
-<h1 class="mb-4">Request Quotation</h1>
-<p>Template for Requesting a Quotation</p>
+<div class="container py-4">
+    <h2 class="mb-4">Submit Quotation Request</h2>
+
+    <form method="post" class="needs-validation" novalidate>
+        <!-- CUSTOMER INFO -->
+        <div class="card mb-4">
+            <div class="card-header fw-semibold">Customer Information</div>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" value="John Smith" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="john.smith@example.com" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Company</label>
+                    <input type="text" class="form-control" value="Lockyer Logistics" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Request ID</label>
+                    <input type="text" class="form-control" placeholder="Auto-generated" readonly>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUOTATION REQUEST -->
+        <div class="card mb-4">
+            <div class="card-header fw-semibold">Quotation Request</div>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Country of Origin</label>
+                    <input type="text" class="form-control" name="Source" placeholder="e.g., Toowoomba, QLD" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Destination</label>
+                    <input type="text" class="form-control" name="Destination" placeholder="e.g., Port of Brisbane, QLD"
+                        required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Number of Containers</label>
+                    <input type="number" min="1" class="form-control" name="NumberOfContainers" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Container Type</label>
+                    <select class="form-select" name="ContainerType" required>
+                        <option value="">Select...</option>
+                        <option>20ft</option>
+                        <option>40ft</option>
+                        <option>40ft High Cube</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Nature of Package (Goods Type)</label>
+                    <input type="text" class="form-control" name="NatureOfPackage"
+                        placeholder="e.g., Pallets / Machinery" required>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Nature of Job</label>
+                    <select class="form-select" name="NatureOfJob" required>
+                        <option value="">Select...</option>
+                        <option>Import</option>
+                        <option>Export</option>
+                        <option>Packing</option>
+                        <option>Unpacking</option>
+                        <option>Quarantine Treatment</option>
+                        <option>Fumigation</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Description of Job</label>
+                    <textarea class="form-control" name="TreatmentHistory" rows="2"
+                        placeholder="Describe the job scope"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Fumigation Details / Pest Risks</label>
+                    <textarea class="form-control" name="FumigationDetails" rows="2"
+                        placeholder="Include pest or contamination details"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="reset" class="btn btn-outline-secondary">Clear</button>
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+
+        <!-- PRICE BREAKDOWN -->
+        <div class="card mt-4">
+            <div class="card-header fw-semibold">Price Breakdown</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Charge Type</th>
+                                <th>20ft Container (AUD)</th>
+                                <th>40ft Container (AUD)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Wharf Booking Fee</td>
+                                <td>60</td>
+                                <td>70</td>
+                            </tr>
+                            <tr>
+                                <td>Lift On / Lift Off</td>
+                                <td>80</td>
+                                <td>120</td>
+                            </tr>
+                            <tr>
+                                <td>Fumigation</td>
+                                <td>220</td>
+                                <td>280</td>
+                            </tr>
+                            <tr>
+                                <td>LCL Delivery Depot</td>
+                                <td>400</td>
+                                <td>500</td>
+                            </tr>
+                            <tr>
+                                <td>Tailgate Inspection</td>
+                                <td>120</td>
+                                <td>160</td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="table-light fw-semibold">
+                            <tr>
+                                <td>Total (Example Sum)</td>
+                                <td>880</td>
+                                <td>1130</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <p class="text-muted small mb-0">
+                    *All rates are in AUD and subject to change depending on scope, volume, and regulatory requirements.
+                </p>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Bootstrap validation
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+}
