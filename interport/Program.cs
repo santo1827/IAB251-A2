@@ -27,21 +27,20 @@ builder.Services
         options.Password.RequiredLength = 6;
     })
     .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders(); // Required for password resets, etc.
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 
 // Razor Pages
 builder.Services.ConfigureApplicationCookie(c =>
 {
-    c.LoginPath = "/login";
-    c.AccessDeniedPath = "/denied";
+    c.LoginPath = "/Identity/Account/Login";
+    c.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
 builder.Services.AddRazorPages(options =>
 {
-    options.Conventions.AuthorizeFolder("/");
-    options.Conventions.AllowAnonymousToPage("/Index");
-    options.Conventions.AllowAnonymousToPage("/Auth/Login");
-    options.Conventions.AllowAnonymousToPage("/Auth/Register");
+    options.Conventions.AuthorizeFolder("/");               // default: require auth
+    options.Conventions.AllowAnonymousToPage("/Index");     // public home
 });
 
 
