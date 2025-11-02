@@ -11,5 +11,41 @@ public class Enums
     Manager,
     Cio,
     }
+
+
+    public enum QuoteStatus
+    {
+        Draft, 
+        SubmittedToCustomer, 
+        AcceptedByCustomer, 
+        RejectedByCustomer
+    }
+    
+    
+    public enum RequestStatus { 
+        Pending, 
+        Approved, 
+        Rejected 
+    }
+
+    public enum ContainerType
+    {
+        TwentyFt, 
+        FortyFt, 
+        LCL
+    }
+    
+    
+    public enum FeeType
+    {
+        WharfBooking,
+        LiftOnOff,
+        Fumigation,
+        LclDeliveryDepot,
+        TailgateInspection,
+        StorageFee,
+        FacilityFee,
+        WharfInspection
+    }
     
 }

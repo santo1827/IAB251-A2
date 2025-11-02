@@ -1,4 +1,5 @@
 using interport.Data;
+using interport.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,11 @@ builder.Services.AddRazorPages();
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, "interport.db");
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite($"Data Source={dbPath}"));
+
+// Add service
+builder.Services.AddScoped<IQuoteLineService, QuoteLineService>();
+builder.Services.AddScoped<IRateScheduleService, RateScheduleService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var app = builder.Build();
 
