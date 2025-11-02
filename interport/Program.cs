@@ -3,18 +3,28 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Razor Pages
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Explicit DB path -> interport.db at project root
+var dbPath = Path.Combine(builder.Environment.ContentRootPath, "interport.db");
+builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseSqlite($"Data Source={dbPath}"));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Auto-create / migrate the database on boot
+// using (var scope = app.Services.CreateScope())
+// {
+//     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//     db.Database.Migrate();
+//     // Optional: log the full path so you can find the file instantly
+//     app.Logger.LogInformation("SQLite DB path: {DbPath}", dbPath);
+// }
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -22,12 +32,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
+app.MapRazorPages().WithStaticAssets();
 
 app.Run();
-
