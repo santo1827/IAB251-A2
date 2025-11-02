@@ -1,27 +1,41 @@
 ﻿using interport.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace interport.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext
+: IdentityDbContext<ApplicationUser, IdentityRole, string>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-    
+
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Employee> Employees => Set<Employee>();
     public DbSet<QuotationRequest> QuotationRequests => Set<QuotationRequest>();
     public DbSet<Quotation> Quotations => Set<Quotation>();
-    
+
     public DbSet<QuoteLine> QuotationLines => Set<QuoteLine>();
-    
+
     public DbSet<Notification> Notifications => Set<Notification>();
-    
-    
+
+
     //Configure database 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<Customer>()
+        .HasOne(c => c.IdentityUser)
+        .WithMany()
+        .HasForeignKey(c => c.IdentityUserId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+         builder.Entity<Employee>()
+        .HasOne(e => e.IdentityUser)
+        .WithMany()
+        .HasForeignKey(e => e.IdentityUserId)
+        .OnDelete(DeleteBehavior.Restrict);
 
         //Set up relationship between Quotation and Lines and deletion behaviour
         builder.Entity<Quotation>()
@@ -39,14 +53,14 @@ public class AppDbContext : DbContext
         builder.Entity<Quotation>().Property(p => p.Subtotal).HasColumnType("decimal(16,4)");
         builder.Entity<Quotation>().Property(p => p.Discount).HasColumnType("decimal(16,4)");
         builder.Entity<Quotation>().Property(p => p.Total).HasColumnType("decimal(16,4)");
-        
-        
+
+
         builder.Entity<QuoteLine>().Property(p => p.UnitPrice).HasColumnType("decimal(16,4)");
         builder.Entity<QuoteLine>().Property(p => p.LineTotal).HasColumnType("decimal(16,4)");
-        
-        
-        
-        
+
+
+
+
         builder.Entity<Notification>()
             .HasOne(notification => notification.Customer)
             .WithMany() // Customer can have many notification.
@@ -59,13 +73,13 @@ public class AppDbContext : DbContext
             .WithMany() // Employee can have many notifications
             .HasForeignKey(notification => notification.EmployeeId)
             .OnDelete(DeleteBehavior.Restrict);
-        
+
         //For inbox
         builder.Entity<Notification>()
             .HasIndex(notification => new { notification.CustomerId, notification.EmployeeId, notification.IsRead, notification.CreatedUtc });
-        
-        
-        
-        
+
+
+
+
     }
 }

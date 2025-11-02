@@ -1,0 +1,20 @@
+@page "/login"
+@model interport.Pages.Auth.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+<form method="post">
+  <div class="mb-3">
+    <label>Email</label>
+    <input asp-for="Input.Email" class="form-control" />
+  </div>
+  <div class="mb-3">
+    <label>Password</label>
+    <input asp-for="Input.Password" type="password" class="form-control" />
+  </div>
+  <div class="form-check mb-3">
+    <input asp-for="Input.RememberMe" class="form-check-input" />
+    <label class="form-check-label" for="Input_RememberMe">Remember me</label>
+  </div>
+  <button class="btn btn-primary" type="submit">Sign in</button>
+</form>

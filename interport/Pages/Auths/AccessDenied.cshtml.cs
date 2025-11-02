@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace interport.Pages.Auth;
 
-public class LogoutModel : PageModel
+public class AccessDeniedModel : PageModel
 {
-    public void OnGet() {}
+    public void OnGet() { }
 }

@@ -1,0 +1,88 @@
+@page "/register"
+
+@model interport.Pages.Auth.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<h1 class="mb-4">Register</h1>
+
+<form method="post">
+  <!-- Role -->
+  <div class="mb-3">
+    <label class="form-label">Registering as</label>
+    <select class="form-select" asp-for="FormData.Role" required>
+      <option value="" selected disabled>Choose...</option>
+      <option value="Customer">Customer</option>
+      <option value="Employee">Employee</option>
+    </select>
+    <span class="text-danger" asp-validation-for="FormData.Role"></span>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="form-label">First name</label>
+      <input class="form-control" asp-for="FormData.FirstName" />
+      <span class="text-danger" asp-validation-for="FormData.FirstName"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Last name</label>
+      <input class="form-control" asp-for="FormData.LastName" />
+      <span class="text-danger" asp-validation-for="FormData.LastName"></span>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input class="form-control" asp-for="FormData.Email" />
+    <span class="text-danger" asp-validation-for="FormData.Email"></span>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Phone</label>
+    <input class="form-control" asp-for="FormData.Phone" />
+    <span class="text-danger" asp-validation-for="FormData.Phone"></span>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Address</label>
+    <input class="form-control" asp-for="FormData.Address" />
+    <span class="text-danger" asp-validation-for="FormData.Address"></span>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Password</label>
+    <input class="form-control" asp-for="FormData.Password" type="password" />
+    <span class="text-danger" asp-validation-for="FormData.Password"></span>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Create account</button>
+</form>
+
+<p class="text-muted mt-3">Already have an account?
+  <a href="/Auth/Login">Login here</a>
+</p>
+
+<script>
+    const roleSelect = document.getElementById('role');
+    const customerSection = document.getElementById('customerSection'); // <-- matches HTML
+    const employeeSection = document.getElementById('employeeSection');
+
+    function setSection(section, visible) {
+        if (!section) return; // defensive
+        section.classList.toggle('d-none', !visible);
+        section.setAttribute('aria-hidden', String(!visible));
+        section.querySelectorAll('input, select, textarea').forEach(el => { // <-- no trailing comma
+            el.disabled = !visible;
+        });
+    }
+
+    function syncUI() {
+        const role = roleSelect.value;
+        setSection(customerSection, role === 'Customer');
+        setSection(employeeSection, role === 'Employee');
+    }
+
+    roleSelect.addEventListener('change', syncUI);
+    // Optional: preselect a default role to avoid "both hidden" on first render
+    syncUI();
+</script>
