@@ -1,0 +1,237 @@
+@page "/edits"
+@using interport.Pages.Quotation.Employees;
+@model EditModel
+@{
+    ViewData["Title"] = "Edit Quotation Pricing";
+    // Optional: set these two to suit your request context
+    var requestId = 1001;
+    var containers = new[] { "20ft", "40ft" }; // add/remove types as needed
+}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Edit Pricing • Request #@requestId</h2>
+        <a class="btn btn-outline-secondary" href="javascript:history.back()">Back</a>
+    </div>
+
+    <form>
+        <div class="accordion" id="containerAccordion">
+            <!-- ===== Container 1 (20ft) ===== -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-c0">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-c0">
+                        Container 1 • 20ft
+                    </button>
+                </h2>
+                <div id="collapse-c0" class="accordion-collapse collapse show" data-bs-parent="#containerAccordion">
+                    <div class="accordion-body">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead class="table-light">
+                                <tr>
+                                    <th style="width:44px;"></th>
+                                    <th>Charge</th>
+                                    <th class="text-end" style="width:180px;">Unit (AUD)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Base your rows on the Rate Extract -->
+                                <tr>
+                                    <td>
+                                        <input class="form-check-input price-line" type="checkbox" data-container="0" data-price="60" checked>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold">Wharf Booking Fee</div>
+                                        <div class="text-muted small">Port wharf timeslot booking</div>
+                                    </td>
+                                    <td class="text-end">$60.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input price-line" type="checkbox" data-container="0" data-price="80"></td>
+                                    <td>
+                                        <div class="fw-semibold">Lift On / Lift Off</div>
+                                        <div class="text-muted small">Depot handling</div>
+                                    </td>
+                                    <td class="text-end">$80.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input price-line" type="checkbox" data-container="0" data-price="220"></td>
+                                    <td>
+                                        <div class="fw-semibold">Fumigation</div>
+                                        <div class="text-muted small">Treatment where applicable</div>
+                                    </td>
+                                    <td class="text-end">$220.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input price-line" type="checkbox" data-container="0" data-price="400"></td>
+                                    <td>
+                                        <div class="fw-semibold">LCL Delivery Depot</div>
+                                        <div class="text-muted small">Delivery from depot (LCL)</div>
+                                    </td>
+                                    <td class="text-end">$400.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input price-line" type="checkbox" data-container="0" data-price="120"></td>
+                                    <td>
+                                        <div class="fw-semibold">Tailgate Inspection</div>
+                                        <div class="text-muted small">AQIS tailgate</div>
+                                    </td>
+                                    <td class="text-end">$120.00</td>
+                                </tr>
+                                </tbody>
+                                <tfoot class="table-light">
+                                <tr>
+                                    <td></td>
+                                    <td class="fw-semibold">Container Total</td>
+                                    <td class="text-end fw-semibold"><span id="container-total-0">$60.00</span></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-secondary select-all" data-container="0" type="button">Select all</button>
+                            <button class="btn btn-sm btn-outline-secondary clear-all" data-container="0" type="button">Clear all</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Container 2 (40ft) ===== -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-c1">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-c1">
+                        Container 2 • 40ft
+                    </button>
+                </h2>
+                <div id="collapse-c1" class="accordion-collapse collapse" data-bs-parent="#containerAccordion">
+                    <div class="accordion-body">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead class="table-light">
+                                <tr>
+                                    <th style="width:44px;"></th>
+                                    <th>Charge</th>
+                                    <th class="text-end" style="width:180px;">Unit (AUD)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><input class="form-check-input price-line" type="checkbox" data-container="1" data-price="70" checked></td>
+                                    <td>
+                                        <div class="fw-semibold">Wharf Booking Fee</div>
+                                        <div class="text-muted small">Port wharf timeslot booking</div>
+                                    </td>
+                                    <td class="text-end">$70.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input price-line" type="checkbox" data-container="1" data-price="120"></td>
+                                    <td>
+                                        <div class="fw-semibold">Lift On / Lift Off</div>
+                                        <div class="text-muted small">Depot handling</div>
+                                    </td>
+                                    <td class="text-end">$120.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input price-line" type="checkbox" data-container="1" data-price="280"></td>
+                                    <td>
+                                        <div class="fw-semibold">Fumigation</div>
+                                        <div class="text-muted small">Treatment where applicable</div>
+                                    </td>
+                                    <td class="text-end">$280.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input price-line" type="checkbox" data-container="1" data-price="500"></td>
+                                    <td>
+                                        <div class="fw-semibold">LCL Delivery Depot</div>
+                                        <div class="text-muted small">Delivery from depot (LCL)</div>
+                                    </td>
+                                    <td class="text-end">$500.00</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input price-line" type="checkbox" data-container="1" data-price="160"></td>
+                                    <td>
+                                        <div class="fw-semibold">Tailgate Inspection</div>
+                                        <div class="text-muted small">AQIS tailgate</div>
+                                    </td>
+                                    <td class="text-end">$160.00</td>
+                                </tr>
+                                </tbody>
+                                <tfoot class="table-light">
+                                <tr>
+                                    <td></td>
+                                    <td class="fw-semibold">Container Total</td>
+                                    <td class="text-end fw-semibold"><span id="container-total-1">$70.00</span></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-secondary select-all" data-container="1" type="button">Select all</button>
+                            <button class="btn btn-sm btn-outline-secondary clear-all" data-container="1" type="button">Clear all</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grand Total -->
+        <div class="card mt-4">
+            <div class="card-body d-flex justify-content-between">
+                <div class="fw-semibold">Grand Total</div>
+                <div class="fw-bold fs-5"><span id="grand-total">$130.00</span></div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Cancel</button>
+            <button type="button" class="btn btn-primary">Save Pricing</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+<script>
+(() => {
+    function recalc() {
+        const totals = {};
+        document.querySelectorAll('.price-line').forEach(cb => {
+            const idx = cb.dataset.container;
+            const price = parseFloat(cb.dataset.price);
+            if (!totals[idx]) totals[idx] = 0;
+            if (cb.checked) totals[idx] += price;
+        });
+
+        let grand = 0;
+        Object.keys(totals).forEach(i => {
+            grand += totals[i];
+            const el = document.getElementById('container-total-' + i);
+            if (el) el.textContent = totals[i].toLocaleString(undefined, { style: 'currency', currency: 'AUD' });
+        });
+
+        document.getElementById('grand-total').textContent =
+            grand.toLocaleString(undefined, { style: 'currency', currency: 'AUD' });
+    }
+
+    document.addEventListener('change', e => {
+        if (e.target.classList.contains('price-line')) recalc();
+    });
+
+    document.querySelectorAll('.select-all').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const idx = btn.dataset.container;
+            document.querySelectorAll('.price-line[data-container="' + idx + '"]').forEach(cb => cb.checked = true);
+            recalc();
+        });
+    });
+
+    document.querySelectorAll('.clear-all').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const idx = btn.dataset.container;
+            document.querySelectorAll('.price-line[data-container="' + idx + '"]').forEach(cb => cb.checked = false);
+            recalc();
+        });
+    });
+
+    recalc();
+})();
+</script>
+}

@@ -1,0 +1,114 @@
+@page "/create"
+@using interport.Pages.Quotation.Customers;
+
+@model RequestModel
+@{
+    ViewData["Title"] = "Submit Quotation Request";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Submit Quotation Request</h2>
+
+    <form method="post" class="needs-validation" novalidate>
+        <!-- CUSTOMER INFO -->
+        <div class="card mb-4">
+            <div class="card-header fw-semibold">Customer Information</div>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" value="John Smith" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="john.smith@example.com" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Company</label>
+                    <input type="text" class="form-control" value="Lockyer Logistics" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Request ID</label>
+                    <input type="text" class="form-control" placeholder="Auto-generated" readonly>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUOTATION REQUEST -->
+        <div class="card mb-4">
+            <div class="card-header fw-semibold">Quotation Request</div>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Country of Origin</label>
+                    <input type="text" class="form-control" name="Source" placeholder="e.g., Toowoomba, QLD" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Destination</label>
+                    <input type="text" class="form-control" name="Destination" placeholder="e.g., Port of Brisbane, QLD" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Number of Containers</label>
+                    <input type="number" min="1" class="form-control" name="NumberOfContainers" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Container Type</label>
+                    <select class="form-select" name="ContainerType" required>
+                        <option value="">Select...</option>
+                        <option>20ft</option>
+                        <option>40ft</option>
+                        <option>40ft High Cube</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Nature of Package (Goods Type)</label>
+                    <input type="text" class="form-control" name="NatureOfPackage" placeholder="e.g., Pallets / Machinery" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Width (m)</label>
+                    <input type="number" step="0.01" class="form-control" name="Width">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Height (m)</label>
+                    <input type="number" step="0.01" class="form-control" name="Height">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Origin & Treatment History</label>
+                    <textarea class="form-control" name="TreatmentHistory" rows="2" placeholder="Describe origin, treatment details"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Fumigation Details / Pest Risks</label>
+                    <textarea class="form-control" name="FumigationDetails" rows="2" placeholder="Include pest or contamination details"></textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Scope / Description of Job</label>
+                    <textarea class="form-control" name="ScopeDescription" rows="3" placeholder="Describe the job scope"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="reset" class="btn btn-outline-secondary">Clear</button>
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Bootstrap validation
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+}

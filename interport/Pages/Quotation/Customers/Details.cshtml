@@ -1,0 +1,305 @@
+@page "/customer/details"
+@using interport.Pages.Quotation.Customers;
+@model Details
+@{
+    ViewData["Title"] = "Quotation Request – Dashboard";
+
+    // Mock placeholders for now; swap to Model.* later
+    var requestId = 1001;
+    var customerName = "Ridgewater Farms";
+    var customerEmail = "ops@ridgewater.com";
+    var customerPhone = "0400 111 222";
+    var company = "Ridgewater Pty Ltd";
+    var source = "Toowoomba, QLD";
+    var destination = "Port of Brisbane, QLD";
+    var containers = 2;
+    var containerType = "20ft";
+    var natureOfPackage = "Pallets";
+    var natureOfJob = "Export";
+    var createdLocal = DateTime.Now.AddDays(-5).ToString("dd MMM yyyy, HH:mm");
+    var status = "New";
+    var priority = "High";
+    var quotedAmount = (decimal?)null;
+
+    var timeline = new[]
+    {
+        ("Request received", "5 days ago"),
+        ("Initial triage completed", "4 days ago"),
+        ("Awaiting rate confirmation", "2 days ago")
+    };
+
+    var charges = new (string label, decimal value)[] {
+        ("Item Charges", 1800m),
+        ("Depot Charges", 250m),
+        ("LCL Delivery Charges", 0m)
+    };
+}
+<div class="container-fluid py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-page="/Quotation/Inbox">Quotation Inbox</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Request #@requestId</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+        <h2 class="mb-0">Quotation Request #@requestId</h2>
+        <span class="badge bg-primary">@status</span>
+        <span class="badge bg-warning text-dark">Priority: @priority</span>
+        @if (quotedAmount.HasValue)
+        {
+            <span class="badge bg-success">Quoted: @quotedAmount.Value.ToString("C")</span>
+        }
+        else
+        {
+            <span class="badge bg-secondary">Not Quoted</span>
+        }
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small mb-1">Customer</div>
+                    <div class="fw-semibold">@customerName</div>
+                    <div class="text-muted">@company</div>
+                    <div class="mt-2">
+                        <a href="mailto:@customerEmail" class="me-2">@customerEmail</a>
+                        <span class="text-muted">@customerPhone</span>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Created: @createdLocal</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small mb-1">Route</div>
+                    <div class="fw-semibold">@source</div>
+                    <div class="text-muted">→ @destination</div>
+                    <div class="mt-2 small">
+                        <span class="badge bg-light text-dark me-1">@natureOfJob</span>
+                        <span class="badge bg-light text-dark">@natureOfPackage</span>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Scope overview</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small mb-1">Containers</div>
+                    <div class="display-6 fw-semibold">@containers</div>
+                    <div class="text-muted">@containerType</div>
+                </div>
+                <div class="card-footer small text-muted">Equipment & count</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small mb-2">Progress</div>
+                    <div class="progress" role="progressbar" aria-label="Progress" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar" style="width: 40%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted mt-2">
+                        <span>Intake</span><span>Quote</span>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Workflow status</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12 col-xl-8">
+            <div class="card mb-3">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div class="fw-semibold">Request Details</div>
+                    <div>
+                        <span class="badge rounded-pill bg-info text-dark me-1">New</span>
+                        <span class="badge rounded-pill bg-light text-dark">SLA: 24h</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        <div>
+                            <div class="text-muted small">Source</div>
+                            <div class="fw-semibold">@source</div>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Destination</div>
+                            <div class="fw-semibold">@destination</div>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Nature of Job</div>
+                            <div class="fw-semibold">@natureOfJob</div>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Nature of Package</div>
+                            <div class="fw-semibold">@natureOfPackage</div>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Containers</div>
+                            <div class="fw-semibold">@containers x @containerType</div>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Requested By</div>
+                            <div class="fw-semibold">@customerName</div>
+                            <div class="text-muted small">@customerEmail</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex gap-2">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generateQuoteModal">Generate Quotation</button>
+                    <button class="btn btn-outline-secondary">Mark In Review</button>
+                    <button class="btn btn-outline-danger">Close Request</button>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header fw-semibold">Activity</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var e in timeline)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="me-3">
+                                    <div class="fw-semibold">@e.Item1</div>
+                                    <div class="text-muted small">By Operations</div>
+                                </div>
+                                <span class="text-muted small">@e.Item2</span>
+                            </li>
+                        }
+                        <li class="list-group-item">
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="offcanvas" data-bs-target="#addNote">Add Note</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header fw-semibold">Attachments</div>
+                <div class="card-body">
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        <div class="col">
+                            <div class="border rounded p-3 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-semibold">Packing List.pdf</div>
+                                    <div class="text-muted small">312 KB • Uploaded 4 days ago</div>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-outline-secondary">View</a>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="border rounded p-3 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-semibold">Route Map.png</div>
+                                    <div class="text-muted small">1.1 MB • Uploaded 2 days ago</div>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-outline-secondary">View</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-outline-primary">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-4">
+            <div class="card mb-3">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div class="fw-semibold">Quotation Snapshot</div>
+                    <span class="badge bg-secondary">Draft</span>
+                </div>
+                <div class="card-body">
+                    <div class="text-muted small mb-2">Charges</div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var c in charges)
+                        {
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>@c.label</span>
+                                <span>@c.value.ToString("C")</span>
+                            </li>
+                        }
+                        <li class="list-group-item d-flex justify-content-between fw-semibold">
+                            <span>Total</span>
+                            <span>@charges.Sum(x => x.value).ToString("C")</span>
+                        </li>
+                    </ul>
+                    <div class="mt-3 d-grid gap-2">
+                        <a class="btn btn-outline-primary" asp-page="/Quotation/View" asp-route-id="@requestId">Open Quotation</a>
+                        <button class="btn btn-success">Send Quote</button>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Last updated 3 days ago</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header fw-semibold">Quick Actions</div>
+                <div class="card-body d-grid gap-2">
+                    <button class="btn btn-outline-primary">Email Customer</button>
+                    <button class="btn btn-outline-secondary">Assign Owner</button>
+                    <button class="btn btn-outline-dark">Download PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="generateQuoteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Generate Quotation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+            <label class="form-label">Container Type</label>
+            <select class="form-select">
+                <option>20ft</option>
+                <option>40ft</option>
+                <option>40ft HC</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Base Charge</label>
+            <input type="number" class="form-control" placeholder="0.00" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Notes</label>
+            <textarea class="form-control" rows="3" placeholder="Scope notes"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary">Generate</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="addNote" aria-labelledby="addNoteLabel">
+  <div class="offcanvas-header">
+    <h5 id="addNoteLabel">Add Note</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="mb-3">
+        <label class="form-label">Visibility</label>
+        <select class="form-select">
+            <option>Internal</option>
+            <option>Customer-visible</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Note</label>
+        <textarea class="form-control" rows="6"></textarea>
+    </div>
+    <button class="btn btn-primary">Save Note</button>
+  </div>
+</div>
