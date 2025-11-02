@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using interport.Models;
 
-namespace interport.Web.Pages.Auth;
+namespace interport.Pages.Auth;
 
 public class LogoutModel : PageModel
 {

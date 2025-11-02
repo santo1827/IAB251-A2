@@ -13,7 +13,7 @@ public class Customer
 
     public string PasswordHash { get; set; } = null!;      // store only hashes
     
-    [Required] public string Country { get; set; }
+    [Required] public string? Country { get; set; }
     
     public string Address { get; set; } = null!;
     

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace interport.Web.Pages.Auth;
+namespace interport.Pages.Auth;
 
 public class RegisterModel : PageModel
 {
@@ -25,9 +25,9 @@ public class RegisterModel : PageModel
     {
         [Required] public string Role { get; set; } = "";           // "Customer" or "Employee"
         [Required] public string FirstName { get; set; } = "";
-        [Required] public string LastName  { get; set; } = "";
+        [Required] public string LastName { get; set; } = "";
         [Required, EmailAddress] public string Email { get; set; } = "";
-        [Required] public string Phone   { get; set; } = "";
+        [Required] public string Phone { get; set; } = "";
         [Required] public string Address { get; set; } = "";
 
         // Optional fields CAN exist on the form, but we will not create domain rows here
@@ -38,7 +38,7 @@ public class RegisterModel : PageModel
         public string Password { get; set; } = "";
     }
 
-    public void OnGet() {}
+    public void OnGet() { }
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -60,10 +60,10 @@ public class RegisterModel : PageModel
         // 3) Create Identity user (Identity owns credentials and hashing)
         var user = new ApplicationUser
         {
-            UserName    = FormData.Email,
-            Email       = FormData.Email,
+            UserName = FormData.Email,
+            Email = FormData.Email,
             DisplayName = $"{FormData.FirstName} {FormData.LastName}",
-            OrgRole     = role
+            OrgRole = role
         };
 
         var createResult = await _users.CreateAsync(user, FormData.Password);
