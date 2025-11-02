@@ -1,4 +1,6 @@
-﻿namespace interport.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace interport.Models;
 
 public class Customer
 {
@@ -11,7 +13,7 @@ public class Customer
 
     public string PasswordHash { get; set; } = null!;      // store only hashes
     
-    public string Country { get; set; }
+    [Required] public string Country { get; set; }
     
     public string Address { get; set; } = null!;
     
