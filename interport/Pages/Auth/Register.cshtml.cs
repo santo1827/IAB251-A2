@@ -1,114 +1,89 @@
 using System.ComponentModel.DataAnnotations;
 using interport.Data;
 using interport.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
-namespace interport.Pages.Auth;
+namespace interport.Web.Pages.Auth;
 
 public class RegisterModel : PageModel
 {
-    private AppDbContext dB;
-    public RegisterModel(AppDbContext db) => dB = db;
+    private readonly UserManager<ApplicationUser> _users;
+    private readonly AppDbContext _db; // kept if you later want to link domain profiles
 
-    [BindProperty] public InputModel FormData { get; set; } = new();
+    public RegisterModel(UserManager<ApplicationUser> users, AppDbContext db)
+    {
+        _users = users;
+        _db = db;
+    }
 
-    //HTML form data
-        public class InputModel
+    [BindProperty]
+    public InputModel FormData { get; set; } = new();
+
+    public class InputModel
+    {
+        [Required] public string Role { get; set; } = "";           // "Customer" or "Employee"
+        [Required] public string FirstName { get; set; } = "";
+        [Required] public string LastName  { get; set; } = "";
+        [Required, EmailAddress] public string Email { get; set; } = "";
+        [Required] public string Phone   { get; set; } = "";
+        [Required] public string Address { get; set; } = "";
+
+        // Optional fields CAN exist on the form, but we will not create domain rows here
+        public string? CompanyName { get; set; }    // Customer-only (ignored here)
+        public string? EmployeeType { get; set; }   // Employee-only (ignored here)
+
+        [Required, DataType(DataType.Password)]
+        public string Password { get; set; } = "";
+    }
+
+    public void OnGet() {}
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid) return Page();
+
+        // 1) Enforce email uniqueness via Identity
+        var existing = await _users.FindByEmailAsync(FormData.Email);
+        if (existing is not null)
         {
-            [Required] public string Role { get; } = "";
-            [Required] public string FirstName { get;} = "";
-            [Required] public string LastName { get;} = "";
-            [Required, EmailAddress] public string Email { get;} = "";
-
-            [Required] public string Phone { get; } = "";
-            [Required] public string Address { get;  } = "";
-
-            // Customer-only
-            public string? CompanyName { get; }
-
-            
-            // Employee only
-            public string? EmployeeType { get; }
-
-            [Required, DataType(DataType.Password)]
-            public string Password { get; } = "";
+            ModelState.AddModelError(nameof(FormData.Email), "Email is already registered.");
+            return Page();
         }
 
-        public void OnGet() {}
+        // 2) Map selection → Identity role name
+        var role = FormData.Role.Equals("Employee", StringComparison.OrdinalIgnoreCase)
+            ? "QuotationOfficer"
+            : "Customer";
 
-        //On post or form submitted.
-        public async Task<IActionResult> OnPostAsync()
+        // 3) Create Identity user (Identity owns credentials and hashing)
+        var user = new ApplicationUser
         {
-            if (!ModelState.IsValid) return Page();
-            
-            
-            bool emailInUse = await dB.Customers.AnyAsync(customer => customer.Email == FormData.Email) 
-                              || await dB.Employees.AnyAsync(employee => employee.Email == FormData.Email);
-            if (emailInUse)
-            {
-                ModelState.AddModelError(nameof(FormData.Email), "Email is already registered.");
-                return Page();
-            }
+            UserName    = FormData.Email,
+            Email       = FormData.Email,
+            DisplayName = $"{FormData.FirstName} {FormData.LastName}",
+            OrgRole     = role
+        };
 
-
-            if (string.Equals(FormData.Role, "Customer", StringComparison.OrdinalIgnoreCase))
-            {
-                var newCustomer = new Customer
-                {
-                    FirstName   = FormData.FirstName,
-                    LastName    = FormData.LastName,
-                    Email       = FormData.Email,
-                    Phone       = FormData.Phone,
-                    Address     = FormData.Address,
-                    CompanyName = FormData.CompanyName,
-                    PasswordHash = FormData.Password
-                };
-                dB.Customers.Add(newCustomer);
-            }
-            else if (string.Equals(FormData.Role, "Employee", StringComparison.OrdinalIgnoreCase))
-            {
-                var type = MapEmployeeType(FormData.EmployeeType);
-                Employee newEmployee = new Employee
-                {
-                    FirstName    = FormData.FirstName,
-                    FamilyName     = FormData.LastName,
-                    Email        = FormData.Email,
-                    Phone        = FormData.Phone,
-                    Address      = FormData.Address,
-                    EmployeeType = FormData.EmployeeType,
-                    PasswordHash = FormData.Password,
-                    CreatedUtc   = DateTime.UtcNow,
-                };
-                dB.Employees.Add(newEmployee);
-            }
-            else
-            {
-                ModelState.AddModelError(nameof(FormData.Role), "Please choose Customer or Employee.");
-                return Page();
-            }
-
-            await dB.SaveChangesAsync();
-
-            // ****Implement redirect to home screen.
-            return RedirectToPage("/Auth/Register");
+        var createResult = await _users.CreateAsync(user, FormData.Password);
+        if (!createResult.Succeeded)
+        {
+            foreach (var e in createResult.Errors)
+                ModelState.AddModelError(string.Empty, e.Description);
+            return Page();
         }
 
-        private static Enums.EmployeeType MapEmployeeType(string? raw)
+        // 4) Attach role to the user
+        var roleResult = await _users.AddToRoleAsync(user, role);
+        if (!roleResult.Succeeded)
         {
-            if (string.IsNullOrWhiteSpace(raw)) return Enums.EmployeeType.WarehouseWorker; // default if something isnt selected
-            // map logical enums to form types:
-            return raw.Trim().ToLower() switch
-            {
-                "admin"               => Enums.EmployeeType.Admin,
-                "quotation officer"   => Enums.EmployeeType.QuotationOfficer,
-                "booking officer"     => Enums.EmployeeType.BookingOfficer,
-                "warehouse officer"   => Enums.EmployeeType.WarehouseWorker,
-                "manager"             => Enums.EmployeeType.Manager,
-                "cio"                 => Enums.EmployeeType.Cio,
-                _                     => Enums.EmployeeType.Manager
-            };
+            foreach (var e in roleResult.Errors)
+                ModelState.AddModelError(string.Empty, e.Description);
+            return Page();
         }
-    
+
+        // 5) Non-optional behavior: do NOT auto sign-in; redirect to Login
+        return RedirectToPage("/login");
+    }
 }
