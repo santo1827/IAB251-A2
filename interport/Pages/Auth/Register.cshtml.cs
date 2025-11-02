@@ -84,6 +84,6 @@ public class RegisterModel : PageModel
         }
 
         // 5) Non-optional behavior: do NOT auto sign-in; redirect to Login
-        return RedirectToPage("/login");
+        return Redirect("/login");
     }
 }
