@@ -17,7 +17,7 @@
     var natureOfPackage = "Pallets";
     var natureOfJob = "Export";
     var createdLocal = DateTime.Now.AddDays(-5).ToString("dd MMM yyyy, HH:mm");
-    var status = "New";
+    var status = "Pending";
     var priority = "High";
     var quotedAmount = (decimal?)null;
 
@@ -68,23 +68,14 @@
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
-            <li class="breadcrumb-item"><a asp-page="/Quotation/Inbox">Quotation Inbox</a></li>
+            <li class="breadcrumb-item"><a asp-page="/Quotation/Customers/CustomerQuotations">Quotation Inbox</a></li>
             <li class="breadcrumb-item active" aria-current="page">Request #@requestId</li>
         </ol>
     </nav>
 
     <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
         <h2 class="mb-0">Quotation Request #@requestId</h2>
-        <span class="badge bg-primary">@status</span>
-        <span class="badge bg-warning text-dark">Priority: @priority</span>
-        @if (quotedAmount.HasValue)
-        {
-            <span class="badge bg-success">Quoted: @quotedAmount.Value.ToString("C")</span>
-        }
-        else
-        {
-            <span class="badge bg-secondary">Not Quoted</span>
-        }
+        <span class="badge bg-warning">@status</span>
     </div>
 
     <div class="row g-3 mb-4">
@@ -183,10 +174,8 @@
                     </div>
                 </div>
                 <div class="card-footer d-flex gap-2">
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generateQuoteModal">Generate
-                        Quotation</button>
-                    <button class="btn btn-outline-secondary">Mark In Review</button>
-                    <button class="btn btn-outline-danger">Close Request</button>
+                    <button class="btn btn-outline-success">Accept Quotation</button>
+                    <button class="btn btn-outline-danger">Reject Quotation</button>
                 </div>
             </div>
             <div class="card mt-3">
@@ -334,21 +323,10 @@
                         </li>
                     </ul>
                     <div class="mt-3 d-grid gap-2">
-                        <a class="btn btn-outline-primary" asp-page="/Quotation/View" asp-route-id="@requestId">Open
-                            Quotation</a>
-                        <button class="btn btn-success">Send Quote</button>
+                        <a class="btn btn-outline-primary" asp-page="/Quotation/View" asp-route-id="@requestId">Download Quotation</a>
                     </div>
                 </div>
                 <div class="card-footer small text-muted">Last updated 3 days ago</div>
-            </div>
-
-            <div class="card">
-                <div class="card-header fw-semibold">Quick Actions</div>
-                <div class="card-body d-grid gap-2">
-                    <button class="btn btn-outline-primary">Email Customer</button>
-                    <button class="btn btn-outline-secondary">Assign Owner</button>
-                    <button class="btn btn-outline-dark">Download PDF</button>
-                </div>
             </div>
         </div>
     </div>

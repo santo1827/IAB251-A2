@@ -44,10 +44,7 @@ builder.Services.AddRazorPages(options =>
 });
 
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("OfficerOnly", p => p.RequireRole("QuotationOfficer"));
-});
+
 
 static async Task SeedAuthAsync(IServiceProvider services)
 {
