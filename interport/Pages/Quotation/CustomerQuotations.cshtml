@@ -2,10 +2,10 @@
 @* Page where quoatation officer can view all of the quotations that need to be done and show their status *@
 @page
 @using interport.Pages.Quotation;
-@model InboxModel
+@model CustomerQuotationsModel
 @using System.Globalization
 @{
-    ViewData["Title"] = "Quotation Inbox";
+    ViewData["Title"] = "My Quotations";
 
     var page = 1;
     var pageSize = 10;
@@ -26,13 +26,10 @@
         s == "Accepted" ? "success" :
         s == "Rejected" ? "danger" :
         s == "Pending"  ? "warning" : "secondary";
-
-    string BadgeForReqStatus(string s) =>
-        s switch { "New" => "primary", "In Review" => "info", "Quoted" => "success", "Closed" => "secondary", _ => "light" };
 }
 <div class="container-fluid py-4">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-        <h2 class="mb-0">Quotation Requests</h2>
+        <h2 class="mb-0">My Quotations</h2>
         <div class="d-flex align-items-center gap-2">
             <span class="badge rounded-pill bg-success">Accepted</span>
             <span class="badge rounded-pill bg-warning text-dark">Pending</span>
@@ -50,15 +47,6 @@
                 <option>Accepted</option>
                 <option>Pending</option>
                 <option>Rejected</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <select name="reqStatus" class="form-select">
-                <option value="">All Request Status</option>
-                <option>New</option>
-                <option>In Review</option>
-                <option>Quoted</option>
-                <option>Closed</option>
             </select>
         </div>
         <div class="col-md-2">
@@ -89,7 +77,6 @@
                     <th>Customer</th>
                     <th>Route</th>
                     <th>Equipment</th>
-                    <th>Request</th>
                     <th>Quotation</th>
                     <th>Created</th>
                     <th class="text-end"></th>
@@ -105,7 +92,6 @@
                 foreach (var r in items)
                 {
                     var qBadge = BadgeForQuoteStatus(r.QuoteStatus);
-                    var reqBadge = BadgeForReqStatus(r.ReqStatus);
                     <tr>
                         <td class="fw-semibold">#@r.Id</td>
                         <td>
@@ -117,7 +103,6 @@
                             <div class="text-muted small">→ @r.Destination</div>
                         </td>
                         <td>@r.Containers x @r.ContainerType</td>
-                        <td><span class="badge bg-@reqBadge">@r.ReqStatus</span></td>
                         <td><span class="badge bg-@qBadge">@r.QuoteStatus</span></td>
                         <td>@r.Created.ToString("dd MMM yyyy, HH:mm", CultureInfo.InvariantCulture)</td>
                         <td class="text-end">
