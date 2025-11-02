@@ -25,6 +25,17 @@ public class AppDbContext
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<Customer>()
+        .HasOne(c => c.IdentityUser)
+        .WithMany()
+        .HasForeignKey(c => c.IdentityUserId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+         builder.Entity<Employee>()
+        .HasOne(e => e.IdentityUser)
+        .WithMany()
+        .HasForeignKey(e => e.IdentityUserId)
+        .OnDelete(DeleteBehavior.Restrict);
 
         //Set up relationship between Quotation and Lines and deletion behaviour
         builder.Entity<Quotation>()

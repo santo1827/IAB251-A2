@@ -5,11 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using interport.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");;
 
 // Explicit DB path -> interport.db at project root
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, "interport.db");
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite($"Data Source={dbPath}"));
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AppDbContext>();
 
 // Add service
 builder.Services.AddScoped<IQuoteLineService, QuoteLineService>();

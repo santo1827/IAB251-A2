@@ -3,6 +3,8 @@
 public class Employee
 {
     public int Id { get; set; }
+    public string? IdentityUserId { get; set; }
+    public ApplicationUser? IdentityUser { get; set; }
     public string FirstName { get; set; } = null!;
     public string FamilyName { get; set; } = null!;
     public string Email { get; set; } = null!;

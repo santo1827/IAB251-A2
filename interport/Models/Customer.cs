@@ -5,6 +5,8 @@ namespace interport.Models;
 public class Customer
 {
     public int Id { get; set; }
+    public string? IdentityUserId { get; set; }
+    public ApplicationUser? IdentityUser { get; set; }
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public string Email { get; set; } = null!;             // username
@@ -12,10 +14,10 @@ public class Customer
     public string? CompanyName { get; set; }
 
     public string PasswordHash { get; set; } = null!;      // store only hashes
-    
+
     [Required] public string? Country { get; set; }
-    
+
     public string Address { get; set; } = null!;
-    
+
     public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 }
