@@ -30,22 +30,20 @@ builder.Services
     .AddDefaultTokenProviders(); // Required for password resets, etc.
 
 // Razor Pages
-builder.Services.AddRazorPages(options =>
-{
-    // Default: everything requires auth
-    options.Conventions.AuthorizeFolder("/");
-
-    // Explicit exceptions (public pages)
-    options.Conventions.AllowAnonymousToPage("/Index");
-    options.Conventions.AllowAnonymousToPage("/Auth/Login");
-    options.Conventions.AllowAnonymousToPage("/Auth/Register");
-});
-
 builder.Services.ConfigureApplicationCookie(c =>
 {
     c.LoginPath = "/login";
     c.AccessDeniedPath = "/denied";
 });
+
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/");
+    options.Conventions.AllowAnonymousToPage("/Index");
+    options.Conventions.AllowAnonymousToPage("/Auth/Login");
+    options.Conventions.AllowAnonymousToPage("/Auth/Register");
+});
+
 
 builder.Services.AddAuthorization(options =>
 {
