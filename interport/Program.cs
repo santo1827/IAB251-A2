@@ -11,6 +11,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add service
 builder.Services.AddScoped<IQuoteLineService, QuoteLineService>();
+builder.Services.AddScoped<IRateScheduleService, RateScheduleService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var app = builder.Build();
 

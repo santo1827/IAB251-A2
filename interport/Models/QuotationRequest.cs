@@ -12,7 +12,12 @@ public class QuotationRequest
     [Required] [Range(0, 999)] public int NumberOfContainers { get; set; }
     [Required] public string NatureOfPackage { get; set; } = null!;
     [Required] public string NatureOfJob { get; set; } = null!; 
+    [Required] public string TreatmentHistory { get; set; } = null!; 
+    [Required] public string FumigationDetails { get; set; } = null!; 
+    
     [Required] public Enums.ContainerType ContainerType { get; set; }
+    
+    
     
     public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 

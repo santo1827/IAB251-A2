@@ -14,6 +14,9 @@ public class AppDbContext : DbContext
     
     public DbSet<QuoteLine> QuotationLines => Set<QuoteLine>();
     
+    public DbSet<Notification> Notifications => Set<Notification>();
+    
+    
     //Configure database 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -40,5 +43,29 @@ public class AppDbContext : DbContext
         
         builder.Entity<QuoteLine>().Property(p => p.UnitPrice).HasColumnType("decimal(16,4)");
         builder.Entity<QuoteLine>().Property(p => p.LineTotal).HasColumnType("decimal(16,4)");
+        
+        
+        
+        
+        builder.Entity<Notification>()
+            .HasOne(notification => notification.Customer)
+            .WithMany() // Customer can have many notification.
+            .HasForeignKey(notification => notification.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Notification  for employee
+        builder.Entity<Notification>()
+            .HasOne(notification => notification.Employee)
+            .WithMany() // Employee can have many notifications
+            .HasForeignKey(notification => notification.EmployeeId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        //For inbox
+        builder.Entity<Notification>()
+            .HasIndex(notification => new { notification.CustomerId, notification.EmployeeId, notification.IsRead, notification.CreatedUtc });
+        
+        
+        
+        
     }
 }

@@ -19,6 +19,7 @@ public class Quotation
     public decimal ItemCharges { get; set; }
     public decimal DepotCharges { get; set; }
     public decimal LclDeliveryCharges { get; set; }
+    
     public string Status { get; set; } = "Pending"; // Accept/Reject/Pending
     public DateTime DateIssuedUtc { get; set; } = DateTime.UtcNow; 
     
@@ -27,6 +28,8 @@ public class Quotation
     //Pricing - Maximum is 999 Billion with 0.0001 precision in DB.
     [Column(TypeName="decimal(16,4)")] public decimal Subtotal { get; set; }
     [Column(TypeName="decimal(16,4)")] public decimal Discount { get; set; }
+    
+    [Column(TypeName="decimal(16,4)")] public decimal GstAmount { get; set; }
     [Column(TypeName="decimal(16,4)")] public decimal Total { get; set; }
     
     public List<QuoteLine> Lines { get; set; } = [];

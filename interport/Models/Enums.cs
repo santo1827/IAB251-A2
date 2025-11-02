@@ -35,4 +35,17 @@ public class Enums
         LCL
     }
     
+    
+    public enum FeeType
+    {
+        WharfBooking,
+        LiftOnOff,
+        Fumigation,
+        LclDeliveryDepot,
+        TailgateInspection,
+        StorageFee,
+        FacilityFee,
+        WharfInspection
+    }
+    
 }
